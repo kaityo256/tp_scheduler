@@ -4,22 +4,17 @@
 #include <mpi.h>
 #include <vector>
 
-void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
+void domc_all(std::vector<Params> &pv, MPI_Comm &my_comm) {
   int rank, procs;
   int grank, gprocs;
   MPI_Comm_rank(my_comm, &rank);
   MPI_Comm_size(my_comm, &procs);
   MPI_Comm_rank(MPI_COMM_WORLD, &grank);
   MPI_Comm_size(MPI_COMM_WORLD, &gprocs);
-  Params p;
-  p.thermalization_loop = thermalization_loop;
-  p.observation_loop = observation_loop;
-  p.size = size;
-  for (size_t i = 0; i < my_t.size(); i++) {
-    double t = my_t[i];
-    p.temperature = t;
-    p.seed = rank;
-    std::vector<double> r = domc(p);
+  for (size_t i = 0; i < pv.size(); i++) {
+    double t = pv[i].temperature;
+    pv[i].seed = rank;
+    std::vector<double> r = domc(pv[i]);
     std::vector<double> rbuf(r.size() * procs);
     MPI_Allgather(r.data(), r.size(), MPI_DOUBLE, rbuf.data(), r.size(), MPI_DOUBLE, my_comm);
     std::vector<std::vector<double>> data(procs);
@@ -38,6 +33,15 @@ void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
 int main(int argc, char **argv) {
   // Tempeartures to be simulated
   std::vector<double> temperatures = {1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2.25, 2.30, 2.35, 2.40, 2.45, 2.50, 2.55, 2.60, 2.65, 2.70, 2.75};
+  std::vector<Params> pv;
+  for (size_t i = 0; i < temperatures.size(); i++) {
+    Params p;
+    p.thermalization_loop = thermalization_loop;
+    p.observation_loop = observation_loop;
+    p.size = size;
+    p.temperature = temperatures[i];
+    pv.push_back(p);
+  }
   MPI_Init(&argc, &argv);
   int rank, procs;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -59,7 +63,7 @@ int main(int argc, char **argv) {
   if (color < rest) {
     e += 1;
   }
-  std::vector<double> my_t(temperatures.begin() + s, temperatures.begin() + e);
+  std::vector<Params> my_t(pv.begin() + s, pv.begin() + e);
   domc_all(my_t, my_comm);
   MPI_Finalize();
 }
