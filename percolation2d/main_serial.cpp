@@ -9,13 +9,11 @@ int main() {
   std::vector<Params> pv;
   for (size_t i = 0; i < densities.size(); i++) {
     Params p;
-    //double density = ds + (de - ds) * i / static_cast<double>(ND);
     p.parameter = densities[i];
     p.size = 64;
     p.seed = 1;
     p.observation_loop = 100;
     pv.push_back(p);
-    //percolation2d(p);
   }
   tps::run(pv, percolation2d, num_samples);
 }

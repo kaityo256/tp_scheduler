@@ -9,7 +9,6 @@ int main(int argc, char **argv) {
   std::vector<Params> pv;
   for (size_t i = 0; i < densities.size(); i++) {
     Params p;
-    //double density = ds + (de - ds) * i / static_cast<double>(ND);
     p.parameter = densities[i];
     p.size = 64;
     p.seed = 1;
