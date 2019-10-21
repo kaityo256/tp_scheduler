@@ -60,9 +60,9 @@ The function `ising2d` is the simulator. It has the folowing interface.
 std::vector<double> ising2d(const Params &p);
 ```
 
-It receives parameters via `Param` structure and returns observables via `std::vector<double>`. In this case, it returns the order parameter and the Binder ratio. 
+It receives parameters via `Params` structure and returns observables via `std::vector<double>`. In this case, it returns the order parameter and the Binder ratio.
 
-The structure `Param` must contain two fields, `parameter` and `seed`. Other fields are optional.
+The structure `Params` must contain two fields, `parameter` and `seed`. Other fields are optional.
 
 The scheduler `tps::run` executes the simulator for all parameter points. It samples `num_samples` times for each parameter point to estimate the error bars.
 
