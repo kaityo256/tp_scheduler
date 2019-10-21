@@ -1,5 +1,5 @@
+#include "../tps.hpp"
 #include "ising_mc.hpp"
-#include "tps.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>

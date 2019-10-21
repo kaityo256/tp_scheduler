@@ -1,11 +1,11 @@
 #pragma once
 
-#include "mpi.h"
 #include "tps.hpp"
+#include <mpi.h>
 
 namespace tps {
-template <class FUNC>
-void run_mpi_comm(std::vector<Params> &pv, FUNC &run, MPI_Comm &my_comm) {
+template <class FUNC, class PARAMS>
+void run_mpi_comm(std::vector<PARAMS> &pv, FUNC &run, MPI_Comm &my_comm) {
   int rank, procs;
   int grank, gprocs;
   MPI_Comm_rank(my_comm, &rank);
@@ -31,8 +31,8 @@ void run_mpi_comm(std::vector<Params> &pv, FUNC &run, MPI_Comm &my_comm) {
   }
 }
 
-template <class FUNC>
-void run_mpi(std::vector<Params> &pv, FUNC &run_task, int num_samples) {
+template <class FUNC, class PARAMS>
+void run_mpi(std::vector<PARAMS> &pv, FUNC &run_task, int num_samples) {
   int rank, procs;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
@@ -53,7 +53,7 @@ void run_mpi(std::vector<Params> &pv, FUNC &run_task, int num_samples) {
   if (color < rest) {
     e += 1;
   }
-  std::vector<Params> my_param(pv.begin() + s, pv.begin() + e);
+  std::vector<PARAMS> my_param(pv.begin() + s, pv.begin() + e);
   run_mpi_comm(my_param, run_task, my_comm);
 }
 } // namespace tps

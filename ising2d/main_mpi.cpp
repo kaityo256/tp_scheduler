@@ -1,5 +1,5 @@
+#include "../tps_mpi.hpp"
 #include "ising_mc.hpp"
-#include "tps_mpi.hpp"
 #include <cmath>
 #include <iostream>
 #include <mpi.h>
