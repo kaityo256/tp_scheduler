@@ -1,7 +1,9 @@
+#include "percolation2d.hpp"
 #include <algorithm>
 #include <iostream>
 #include <random>
 #include <vector>
+
 int L; // System Size
 int N; // Number of spins
 std::vector<int> clusters;
@@ -14,13 +16,6 @@ void init(int size) {
     clusters[i] = i;
   }
 }
-
-struct Params {
-  double parameter;
-  int seed;
-  int size;
-  int observation_loop;
-};
 
 int find(int i) {
   while (clusters[i] != i) {
@@ -71,7 +66,7 @@ void clustering(double density, std::mt19937 &mt) {
   }
 }
 
-void percolation2d(Params &p) {
+std::vector<double> percolation2d(Params &p) {
   std::mt19937 mt(p.seed);
   const double density = p.parameter;
   double m = 0.0;  // max cluster size
@@ -84,22 +79,8 @@ void percolation2d(Params &p) {
   }
   m /= static_cast<double>(p.observation_loop);
   cp /= static_cast<double>(p.observation_loop);
-  std::cout << density;
-  std::cout << " " << m;
-  std::cout << " " << cp << std::endl;
-}
-
-int main() {
-  const double ds = 0.1;
-  const double de = 0.9;
-  const int ND = 20;
-  for (int i = 0; i < ND; i++) {
-    Params p;
-    double density = ds + (de - ds) * i / static_cast<double>(ND);
-    p.parameter = density;
-    p.size = 32;
-    p.seed = 1;
-    p.observation_loop = 100;
-    percolation2d(p);
-  }
+  std::vector<double> r;
+  r.push_back(m);
+  r.push_back(cp);
+  return r;
 }
