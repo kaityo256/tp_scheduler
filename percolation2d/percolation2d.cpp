@@ -19,6 +19,7 @@ struct Params {
   double parameter;
   int seed;
   int size;
+  int observation_loop;
 };
 
 int find(int i) {
@@ -62,9 +63,13 @@ void clustering(double density, std::mt19937 &mt) {
 void percolation2d(Params &p) {
   std::mt19937 mt(p.seed);
   const double density = p.parameter;
-  init(p.size);
-  clustering(density, mt);
-  double m = max_cluster_size();
+  double m = 0.0;
+  for (int i = 0; i < p.observation_loop; i++) {
+    init(p.size);
+    clustering(density, mt);
+    m += max_cluster_size();
+  }
+  m /= static_cast<double>(p.observation_loop);
   std::cout << density << " " << m << std::endl;
 }
 
@@ -78,6 +83,7 @@ int main() {
     p.parameter = density;
     p.size = 32;
     p.seed = 1;
+    p.observation_loop = 100;
     percolation2d(p);
   }
 }
