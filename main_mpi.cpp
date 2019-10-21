@@ -22,7 +22,7 @@ void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
     std::vector<double> r = domc(p);
     std::vector<double> rbuf(r.size() * procs);
     MPI_Allgather(r.data(), r.size(), MPI_DOUBLE, rbuf.data(), r.size(), MPI_DOUBLE, my_comm);
-    vvd data(procs);
+    std::vector<std::vector<double>> data(procs);
     for (int j = 0; j < procs; j++) {
       data[j].resize(r.size());
       for (size_t k = 0; k < r.size(); k++) {

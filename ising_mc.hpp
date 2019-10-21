@@ -14,9 +14,7 @@ struct Params {
 
 std::vector<double> domc(const Params &p);
 
-typedef std::vector<std::vector<double>> vvd;
-
-__attribute__((weak)) void calc_stdev(const double temperature, const vvd &data) {
+__attribute__((weak)) void calc_stdev(const double temperature, const std::vector<std::vector<double>> &data) {
   std::vector<double> vr, vr2;
   const int num_samples = data.size();
   vr.resize(data[0].size());

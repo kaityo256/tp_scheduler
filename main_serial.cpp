@@ -11,7 +11,7 @@ void domc_all(std::vector<double> temperatures) {
   for (size_t i = 0; i < temperatures.size(); i++) {
     double t = temperatures[i];
     p.temperature = t;
-    vvd data;
+    std::vector<std::vector<double>> data;
     for (int j = 0; j < num_samples; j++) {
       p.seed = j;
       std::vector<double> r = domc(p);
