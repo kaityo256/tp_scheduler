@@ -14,8 +14,10 @@ void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
   Params p;
   p.thermalization_loop = thermalization_loop;
   p.observation_loop = observation_loop;
-  p.size = size; for (size_t i = 0; i < my_t.size(); i++) {
-    double t = my_t[i]; p.temperature = t;
+  p.size = size;
+  for (size_t i = 0; i < my_t.size(); i++) {
+    double t = my_t[i];
+    p.temperature = t;
     p.seed = rank;
     std::vector<double> r = domc(p);
     std::vector<double> rbuf(r.size() * procs);
@@ -33,7 +35,6 @@ void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
   }
 }
 
-
 int main(int argc, char **argv) {
   // Tempeartures to be simulated
   std::vector<double> temperatures = {1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2.25, 2.30, 2.35, 2.40, 2.45, 2.50, 2.55, 2.60, 2.65, 2.70, 2.75};
@@ -42,9 +43,9 @@ int main(int argc, char **argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
   MPI_Comm my_comm = MPI_COMM_WORLD;
-  if( procs % num_samples !=0 && rank == 0){
-     std::cerr << "Number of procs must be multiple of num_samples" << std::endl;
-     MPI_Abort(MPI_COMM_WORLD, -1);
+  if (procs % num_samples != 0 && rank == 0) {
+    std::cerr << "Number of procs must be multiple of num_samples" << std::endl;
+    MPI_Abort(MPI_COMM_WORLD, -1);
   }
   int csize = num_samples;
   int color = rank / csize;
@@ -53,9 +54,9 @@ int main(int argc, char **argv) {
   int block = num_data / num_colors;
   int rest = num_data % num_colors;
   MPI_Comm_split(MPI_COMM_WORLD, color, rank, &my_comm);
-  int s = color*block + std::min(color, rest);
+  int s = color * block + std::min(color, rest);
   int e = s + block;
-  if ( color < rest){
+  if (color < rest) {
     e += 1;
   }
   std::vector<double> my_t(temperatures.begin() + s, temperatures.begin() + e);

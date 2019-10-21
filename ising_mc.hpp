@@ -1,8 +1,8 @@
 #pragma once
+#include "parameters.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
-#include "parameters.hpp"
 
 struct Params {
   int size;
@@ -16,7 +16,7 @@ std::vector<double> domc(const Params &p);
 
 typedef std::vector<std::vector<double>> vvd;
 
-__attribute__ ((weak))  void calc_stdev(const double temperature, const vvd &data) {
+__attribute__((weak)) void calc_stdev(const double temperature, const vvd &data) {
   std::vector<double> vr, vr2;
   const int num_samples = data.size();
   vr.resize(data[0].size());
