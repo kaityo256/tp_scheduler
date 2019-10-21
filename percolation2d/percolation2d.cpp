@@ -41,6 +41,17 @@ void unite(int ix, int iy, int ix2, int iy2, double density, std::mt19937 &mt) {
   clusters[c1] = c2;
 }
 
+double crossing_probability(void) {
+  for (int i = 0; i < L; i++) {
+    int ci = find(i);
+    for (int j = 0; j < L; j++) {
+      int cj = find(j + (L - 1) * L);
+      if (ci == cj) return 1.0;
+    }
+  }
+  return 0.0;
+}
+
 double max_cluster_size(void) {
   std::vector<int> count(N, 0);
   for (int i = 0; i < N; i++) {
@@ -63,14 +74,19 @@ void clustering(double density, std::mt19937 &mt) {
 void percolation2d(Params &p) {
   std::mt19937 mt(p.seed);
   const double density = p.parameter;
-  double m = 0.0;
+  double m = 0.0;  // max cluster size
+  double cp = 0.0; // Crossing Probability
   for (int i = 0; i < p.observation_loop; i++) {
     init(p.size);
     clustering(density, mt);
     m += max_cluster_size();
+    cp += crossing_probability();
   }
   m /= static_cast<double>(p.observation_loop);
-  std::cout << density << " " << m << std::endl;
+  cp /= static_cast<double>(p.observation_loop);
+  std::cout << density;
+  std::cout << " " << m;
+  std::cout << " " << cp << std::endl;
 }
 
 int main() {
