@@ -7,9 +7,8 @@
 #include <random>
 #include <vector>
 
-int L;       // System Size
-int N;       // Number of spins
-int ND = 20; // Number of temperatures to be observed
+int L; // System Size
+int N; // Number of spins
 double e_table[5];
 std::vector<int> spin;
 std::vector<std::array<int, 4>> neighbor;
