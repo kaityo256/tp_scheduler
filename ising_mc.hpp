@@ -1,5 +1,4 @@
 #pragma once
-#include "parameters.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
@@ -12,4 +11,4 @@ struct Params {
   int observation_loop;
 };
 
-std::vector<double> domc(const Params &p);
+std::vector<double> ising2d(const Params &p);

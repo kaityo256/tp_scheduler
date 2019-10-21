@@ -21,5 +21,5 @@ int main(void) {
     p.parameter = temperatures[i];
     pv.push_back(p);
   }
-  tps::run(pv, domc, num_samples);
+  tps::run(pv, ising2d, num_samples);
 }

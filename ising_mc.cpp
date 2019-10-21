@@ -70,9 +70,9 @@ void init(int size, double beta) {
   make_table(beta);
 }
 
-std::vector<double> domc(const Params &p) {
+std::vector<double> ising2d(const Params &p) {
   std::mt19937 mt(p.seed);
-  double beta = 1.0 / p.temperature;
+  double beta = 1.0 / p.parameter;
   init(p.size, beta);
   for (int j = 0; j < p.thermalization_loop; j++) {
     single_flip(mt);
