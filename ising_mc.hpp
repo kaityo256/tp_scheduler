@@ -6,7 +6,7 @@
 
 struct Params {
   int size;
-  double temperature;
+  double parameter;
   int seed;
   int thermalization_loop;
   int observation_loop;

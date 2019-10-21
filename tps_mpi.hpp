@@ -13,7 +13,7 @@ void run_mpi_comm(std::vector<Params> &pv, FUNC &run, MPI_Comm &my_comm) {
   MPI_Comm_rank(MPI_COMM_WORLD, &grank);
   MPI_Comm_size(MPI_COMM_WORLD, &gprocs);
   for (size_t i = 0; i < pv.size(); i++) {
-    double t = pv[i].temperature;
+    double t = pv[i].parameter;
     pv[i].seed = rank;
     std::vector<double> r = run(pv[i]);
     std::vector<double> rbuf(r.size() * procs);

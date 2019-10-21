@@ -5,7 +5,10 @@
 #include <mpi.h>
 #include <vector>
 
-const int num_samples = 4; // Number of Samplings at each temperatures
+const int num_samples = 4;             // Number of Samplings at each temperatures
+const int size = 32;                   // System Size
+const int thermalization_loop = 10000; // Number of Loops for Thermalization
+const int observation_loop = 1000;     // Number of Loops for Observation
 
 int main(int argc, char **argv) {
   // Tempeartures to be simulated
@@ -16,7 +19,7 @@ int main(int argc, char **argv) {
     p.thermalization_loop = thermalization_loop;
     p.observation_loop = observation_loop;
     p.size = size;
-    p.temperature = temperatures[i];
+    p.parameter = temperatures[i];
     pv.push_back(p);
   }
   MPI_Init(&argc, &argv);
