@@ -15,6 +15,11 @@ mpi.out: main_mpi.o ising_mc.o
 %.o: %.cpp
 	g++ $(CPPFLAGS) $< -o $@
 
+test: serial.out mpi.out
+	time ./serial.out > serial.dat
+	time mpirun -np 40 ./mpi.out | sort -nk 1 > mpi.dat
+	diff serial.dat mpi.dat
+
 .PHONY: clean
 
 clean:
