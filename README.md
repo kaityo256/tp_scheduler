@@ -2,20 +2,19 @@
 
 ## Summary
 
-This is a sample code for trivial parallelization scheduler. Trivial parallelization, aka, embarrassingly parallelization is a basic technique to utilize the computational power of parallel machine.
+This is a sample code for a trivial parallelization scheduler. Trivial parallelization, aka, embarrassingly parallelization is a basic technique to utilize the computational power of parallel machine.
 
-There are two kinds of tirivial parallelization. One is the parallelization on the parameter space. Suppose we study the temperature dependence of something. If the simulations at the different temperatures are independent each other, they can be performed simultaneously. The other is the parallelizationon the sampling space. We usually perform the simulation with same parameters but with different seed in order to estimate error bars. Of cource the runs with different seeds can be performed simultaneously.
+There are two kinds of trivial parallelization. One is the parallelization of the parameter space. Suppose we study the temperature dependence of something. If the simulations at different temperatures are independent of each other, they can be performed simultaneously. The other is the parallelization of the sampling space. We usually perform the simulation with the same parameters but with different seed to estimate error bars. Of course, the runs with different seeds can be performed simultaneously.
 
 This scheduler adopts two kinds of trivial parallelization simultaneously. Namely, we divide the processes into several groups and assign different tasks to each group.
 
-Suppose we have 20 processes. We divide them into five groups
- by using `MPI_Comm_split`.
+Suppose we have 20 processes. We divide them into five groups by using `MPI_Comm_split`.
 
 ```txt
 0 1 2 3 | 4 5 6 7 | 8 9 10 11 | 12 13 14 15 | 16 17 18 19
 ```
 
-A different group has different color. The four processes in a group are used for sampling, i.e., they perform simulations with same parameters but with different seeds. Then we can estimate the error bars.
+A different group has a different color. The four processes in a group are used for sampling, i.e., they perform simulations with the same parameters but with different seeds. Then we can estimate the error bars.
 
 Different colors are used for parallelization on the parameter space. For example, we want to perform simulations at 20 temperature points. Then the temperatures are divided into five groups. Each temperature group is assigned to each process group.
 
@@ -65,7 +64,7 @@ It receives parameters via `Param` structure and returns observables via `std::v
 
 The structure `Param` must contain two fields, `parameter` and `seed`. Other fields are optional.
 
-The scheduler `tps::run` executes the simulator for all parameter points. It samples `num_samples` times for each parameter point in order to estimate the error bars.
+The scheduler `tps::run` executes the simulator for all parameter points. It samples `num_samples` times for each parameter point to estimate the error bars.
 
 It will give us the following results.
 
@@ -75,7 +74,7 @@ It will give us the following results.
 
 ### Parallel Run
 
-Here is the sample code for parallel run which is almost identical to that for the serial run.
+Here is the sample code for a parallel run which is almost identical to that for the serial run.
 
 ```cpp
 #include "../tps_mpi.hpp"
@@ -153,13 +152,13 @@ Files serial.dat and mpi.dat are identical
 
 ## Sample for Percolation
 
-It is easy to apply this scheduler for different model. Consier the bond-percolation on the square lattice. The simulator has the following form.
+It is easy to apply this scheduler for a different model. Consider the bond-percolation on the square lattice. The simulator has the following form.
 
 ```cpp
 std::vector<double> percolation2d(Params &p);
 ```
 
-The key parameter is density of the active bonds. It returns two observables, the normalized size of the largest cluster and the crossing probability.
+The key parameter is the density of the active bonds. It returns two observables, the normalized size of the largest cluster and the crossing probability.
 
 Here is the code for the serial run.
 
@@ -185,7 +184,7 @@ int main() {
 }
 ```
 
-Note that, the densities are shuffled to avoid the load inbalance.
+Note that, the densities are shuffled to avoid the load imbalance.
 
 And here is the code for the parallel run.
 
@@ -219,3 +218,24 @@ It will give us the following results.
 
 ![Crossing Probability](percolation2d/crossing.png)
 
+Here are the benchmark results.
+
+```sh
+$ time ./serial.out | sort -nk1 > serial.dat
+real    0m19.653s
+user    0m19.605s
+sys     0m0.004s
+```
+
+```sh
+$ time mpirun -np 40 ./mpi.out | sort -nk1 > mpi.dat
+real    0m1.286s
+user    0m29.176s
+sys     0m0.791s
+```
+
+The speed up is about 15.3x which is worse than the Ising model due to the load imbalance.
+
+## License
+
+This software is released under the MIT License, see [LICENSE](LICENSE).
