@@ -17,7 +17,8 @@ void domc_all(void) {
     p.temperature = t;
     vvd data;
     for (int j = 0; j < num_samples; j++) {
-      p.seed = i * num_samples + j;
+      p.seed = j;
+      //printf("%02d : %f\n",p.seed, t);
       std::vector<double> r = domc(p);
       data.push_back(r);
     }
