@@ -3,11 +3,10 @@
 #include <iostream>
 #include <vector>
 
-std::vector<double> temperatures = {1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2.25, 2.30, 2.35, 2.40, 2.45, 2.50, 2.55, 2.60, 2.65, 2.70, 2.75};
+const int num_samples = 4;
 
-void domc_all(void) {
+void domc_all(std::vector<double> temperatures) {
   int size = 32;
-  int num_samples = 4;
   Params p;
   p.thermalization_loop = 1000;
   p.observation_loop = 1000;
@@ -18,7 +17,6 @@ void domc_all(void) {
     vvd data;
     for (int j = 0; j < num_samples; j++) {
       p.seed = j;
-      //printf("%02d : %f\n",p.seed, t);
       std::vector<double> r = domc(p);
       data.push_back(r);
     }
@@ -27,5 +25,6 @@ void domc_all(void) {
 }
 
 int main(void) {
-  domc_all();
+  std::vector<double> temperatures = {1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2.25, 2.30, 2.35, 2.40, 2.45, 2.50, 2.55, 2.60, 2.65, 2.70, 2.75};
+  domc_all(temperatures);
 }
