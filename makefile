@@ -15,7 +15,6 @@ mpi.out: main_mpi.o ising_mc.o
 %.o: %.cpp
 	g++ $(CPPFLAGS) $< -o $@
 
-
 .PHONY: clean
 
 clean:

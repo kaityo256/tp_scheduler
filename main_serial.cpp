@@ -3,13 +3,10 @@
 #include <iostream>
 #include <vector>
 
-const int num_samples = 4;
-
 void domc_all(std::vector<double> temperatures) {
-  int size = 32;
   Params p;
-  p.thermalization_loop = 1000;
-  p.observation_loop = 1000;
+  p.thermalization_loop = thermalization_loop;
+  p.observation_loop = observation_loop;
   p.size = size;
   for (size_t i = 0; i < temperatures.size(); i++) {
     double t = temperatures[i];

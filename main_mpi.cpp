@@ -4,10 +4,7 @@
 #include <mpi.h>
 #include <vector>
 
-const int num_samples = 4;
-
 void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
-  int size = 32;
   int rank, procs;
   int grank, gprocs;
   MPI_Comm_rank(my_comm, &rank);
@@ -15,8 +12,8 @@ void domc_all(std::vector<double> &my_t, MPI_Comm &my_comm) {
   MPI_Comm_rank(MPI_COMM_WORLD, &grank);
   MPI_Comm_size(MPI_COMM_WORLD, &gprocs);
   Params p;
-  p.thermalization_loop = 1000;
-  p.observation_loop = 1000;
+  p.thermalization_loop = thermalization_loop;
+  p.observation_loop = observation_loop;
   p.size = size; for (size_t i = 0; i < my_t.size(); i++) {
     double t = my_t[i]; p.temperature = t;
     p.seed = rank;
