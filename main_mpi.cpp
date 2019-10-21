@@ -1,10 +1,12 @@
 #include "ising_mc.hpp"
+#include "tps.hpp"
 #include <cmath>
 #include <iostream>
 #include <mpi.h>
 #include <vector>
 
-void domc_all(std::vector<Params> &pv, MPI_Comm &my_comm) {
+template <class FUNC>
+void domc_all(std::vector<Params> &pv, FUNC &run, MPI_Comm &my_comm) {
   int rank, procs;
   int grank, gprocs;
   MPI_Comm_rank(my_comm, &rank);
@@ -14,7 +16,7 @@ void domc_all(std::vector<Params> &pv, MPI_Comm &my_comm) {
   for (size_t i = 0; i < pv.size(); i++) {
     double t = pv[i].temperature;
     pv[i].seed = rank;
-    std::vector<double> r = domc(pv[i]);
+    std::vector<double> r = run(pv[i]);
     std::vector<double> rbuf(r.size() * procs);
     MPI_Allgather(r.data(), r.size(), MPI_DOUBLE, rbuf.data(), r.size(), MPI_DOUBLE, my_comm);
     std::vector<std::vector<double>> data(procs);
@@ -63,7 +65,7 @@ int main(int argc, char **argv) {
   if (color < rest) {
     e += 1;
   }
-  std::vector<Params> my_t(pv.begin() + s, pv.begin() + e);
-  domc_all(my_t, my_comm);
+  std::vector<Params> my_param(pv.begin() + s, pv.begin() + e);
+  domc_all(my_param, domc, my_comm);
   MPI_Finalize();
 }

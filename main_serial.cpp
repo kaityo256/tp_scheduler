@@ -1,20 +1,8 @@
 #include "ising_mc.hpp"
+#include "tps.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
-
-template <class FUNC>
-void domc_all(std::vector<Params> &pv, FUNC &run) {
-  for (size_t i = 0; i < pv.size(); i++) {
-    std::vector<std::vector<double>> data;
-    for (int j = 0; j < num_samples; j++) {
-      pv[i].seed = j;
-      std::vector<double> r = run(pv[i]);
-      data.push_back(r);
-    }
-    calc_stdev(pv[i].temperature, data);
-  }
-}
 
 int main(void) {
   // Tempeartures to be simulated
