@@ -3,6 +3,8 @@ OBJ=$(SRC:.cpp=.o)
 CC=g++
 CPPFLAGS=-O3 -Wall -Wextra -std=c++11 -c
 
+-include makefile.opt
+
 all: serial.out mpi.out
 
 
