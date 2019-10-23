@@ -1,11 +1,12 @@
 #pragma once
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 namespace tps {
 
-__attribute__((weak)) void calc_stdev(const double parameter, const std::vector<std::vector<double>> &data) {
+__attribute__((weak)) void calc_stdev(const double parameter, const std::vector<std::vector<double>> &data, std::ostream &os) {
   std::vector<double> vr, vr2;
   const int num_samples = data.size();
   vr.resize(data[0].size());
@@ -16,13 +17,13 @@ __attribute__((weak)) void calc_stdev(const double parameter, const std::vector<
       vr2[k] += (data[j][k] * data[j][k]) / static_cast<double>(num_samples);
     }
   }
-  std::cout << parameter;
+  os << parameter;
   for (size_t j = 0; j < vr.size(); j++) {
-    std::cout << " " << vr[j];
+    os << " " << vr[j];
     const double var = (vr2[j] - vr[j] * vr[j]) / static_cast<double>(num_samples - 1);
-    std::cout << " +- " << std::sqrt(var);
+    os << " +- " << std::sqrt(var);
   }
-  std::cout << std::endl;
+  os << std::endl;
 }
 
 template <class FUNC, class PARAMS>
@@ -34,7 +35,9 @@ void run(std::vector<PARAMS> &pv, FUNC &run_task, int num_samples) {
       std::vector<double> r = run_task(pv[i]);
       data.push_back(r);
     }
-    calc_stdev(pv[i].parameter, data);
+    std::stringstream ss;
+    calc_stdev(pv[i].parameter, data, ss);
+    std::cout << ss.str();
   }
 }
 

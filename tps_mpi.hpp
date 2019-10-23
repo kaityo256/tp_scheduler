@@ -1,11 +1,13 @@
 #pragma once
 
 #include "tps.hpp"
+#include <fstream>
 #include <mpi.h>
+#include <sstream>
 
 namespace tps {
 template <class FUNC, class PARAMS>
-void run_mpi_comm(std::vector<PARAMS> &pv, FUNC &run, MPI_Comm &my_comm) {
+void run_mpi_comm(std::vector<PARAMS> &pv, FUNC &run, MPI_Comm &my_comm, std::ostream &os) {
   int rank, procs;
   int grank, gprocs;
   MPI_Comm_rank(my_comm, &rank);
@@ -26,13 +28,13 @@ void run_mpi_comm(std::vector<PARAMS> &pv, FUNC &run, MPI_Comm &my_comm) {
       }
     }
     if (rank == 0) {
-      tps::calc_stdev(t, data);
+      tps::calc_stdev(t, data, os);
     }
   }
 }
 
 template <class FUNC, class PARAMS>
-void run_mpi(std::vector<PARAMS> &pv, FUNC &run_task, int num_samples) {
+void run_mpi(std::vector<PARAMS> &pv, FUNC &run_task, int num_samples, const std::string outputfile = "") {
   int rank, procs;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
@@ -54,6 +56,27 @@ void run_mpi(std::vector<PARAMS> &pv, FUNC &run_task, int num_samples) {
     e += 1;
   }
   std::vector<PARAMS> my_param(pv.begin() + s, pv.begin() + e);
-  run_mpi_comm(my_param, run_task, my_comm);
+  std::stringstream ss;
+  run_mpi_comm(my_param, run_task, my_comm, ss);
+  if (outputfile == "") {
+    std::cout << ss.str();
+    return;
+  }
+  std::ofstream ofs;
+  if (rank == 0) {
+    ofs.open(outputfile);
+  }
+  ofs.close();
+  MPI_Barrier(MPI_COMM_WORLD);
+  for (int i = 0; i < procs; i++) {
+    MPI_Barrier(MPI_COMM_WORLD);
+    int local_rank;
+    MPI_Comm_rank(my_comm, &local_rank);
+    if (local_rank == 0) {
+      ofs.open(outputfile, std::ios::app);
+      ofs << ss.str();
+      ofs.close();
+    }
+  }
 }
 } // namespace tps
