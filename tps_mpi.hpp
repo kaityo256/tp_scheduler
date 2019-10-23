@@ -70,6 +70,7 @@ void run_mpi(std::vector<PARAMS> &pv, FUNC &run_task, int num_samples, const std
   MPI_Barrier(MPI_COMM_WORLD);
   for (int i = 0; i < procs; i++) {
     MPI_Barrier(MPI_COMM_WORLD);
+    if (rank != i) continue;
     int local_rank;
     MPI_Comm_rank(my_comm, &local_rank);
     if (local_rank == 0) {

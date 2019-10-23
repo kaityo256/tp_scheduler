@@ -23,6 +23,6 @@ int main(int argc, char **argv) {
     pv.push_back(p);
   }
   MPI_Init(&argc, &argv);
-  tps::run_mpi(pv, ising2d, num_samples);
+  tps::run_mpi(pv, ising2d, num_samples, "mpi.dat");
   MPI_Finalize();
 }
